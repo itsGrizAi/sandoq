@@ -26,6 +26,7 @@ export type AnalyticsEvent =
   | 'wallet_rejected'
   | 'circle_viewed'
   | 'circle_created'
+  | 'circle_shared'
   | 'joined'
   | 'left'
   | 'invited'

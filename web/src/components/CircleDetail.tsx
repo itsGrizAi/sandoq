@@ -15,12 +15,14 @@ import { track, type AnalyticsEvent } from '../lib/analytics';
 import * as circle from '../lib/circle';
 import type { CircleState, Seat } from '../lib/circle';
 import { AppError, classifyError } from '../lib/errors';
+import { circleUrl, inviteMessage } from '../lib/invite';
 import type { TxProgress, TxStage } from '../lib/rpc';
 import { signTransaction } from '../lib/wallet';
 import { ActivityFeed } from './ActivityFeed';
 import { StatusPill } from './CircleCard';
 import { Countdown } from './Countdown';
 import { ErrorBanner } from './ErrorBanner';
+import { CopyButton, ShareButton } from './Share';
 import { Skeleton } from './Skeleton';
 import { TxStatus } from './TxStatus';
 
@@ -163,6 +165,12 @@ function Header({
       ? (state.members / state.size) * 100
       : (state.round / state.size) * 100;
 
+  // A circle is its own URL, so the invite is a link plus the terms. Only a
+  // circle with seats left gets the "join me" message; a running one gets a
+  // plain link, which is all there is to share once the table is full.
+  const url = circleUrl(address);
+  const joinable = state.status === 'filling' && !isClosed(state.fillDeadline);
+
   return (
     <section className="card circle">
       <header className="circle__header">
@@ -224,6 +232,40 @@ function Header({
             </div>
           </>
         )}
+      </div>
+
+      <div className="circle__share">
+        {joinable ? (
+          <ShareButton
+            label={state.private ? '🔗 Copy invite' : '🔗 Invite people'}
+            text={inviteMessage(
+              {
+                name: state.name,
+                contribution: formatXlm(state.contribution),
+                period: formatPeriod(state.period),
+                collateral: formatXlm(state.collateral),
+                size: state.size,
+                private: state.private,
+              },
+              url,
+            )}
+            url={url}
+            onShared={(outcome) => {
+              if (outcome !== 'cancelled' && outcome !== 'failed') {
+                track('circle_shared', { circle: address, private: state.private });
+              }
+            }}
+          />
+        ) : (
+          <CopyButton label="🔗 Copy link" value={url} />
+        )}
+        <small className="muted">
+          {!joinable
+            ? 'The link opens this circle directly.'
+            : state.private
+              ? 'Sends the link and the terms. Invitees reply with their address, which the organizer adds below.'
+              : 'Sends the link and the terms. Anyone who opens it can take one of the open seats.'}
+        </small>
       </div>
 
       <footer className="circle__meta">
@@ -295,10 +337,17 @@ function Actions({
       )}
 
       {state.status === 'filling' && blockedByInvite && !isClosed(state.fillDeadline) && (
-        <p className="muted">
-          🔒 This circle is invite-only. Ask the organizer ({shortAddress(state.organizer)}) to add
-          your address, then refresh.
-        </p>
+        <div className="invite">
+          <p className="muted">
+            🔒 This circle is invite-only. Send your address to the organizer (
+            {shortAddress(state.organizer)}) and the seat opens as soon as they add it — the page
+            re-checks on its own.
+          </p>
+          <div className="invite__row">
+            <code className="invite__address">{you}</code>
+            <CopyButton label="Copy my address" value={you} primary />
+          </div>
+        </div>
       )}
 
       {state.status === 'filling' && !yourSeat && !blockedByInvite && !isClosed(state.fillDeadline) && (
