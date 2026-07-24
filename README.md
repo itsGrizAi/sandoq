@@ -163,6 +163,11 @@ linked to Stellar Expert.
 
 ![Feedback](screenshots/08-feedback.png)
 
+**Invite links** — one tap sends the circle's link and its terms to the OS share sheet, or the
+clipboard. A 🔒 circle is invite-only, so the organizer still has to allow the address on-chain.
+
+![Invite link](screenshots/09-invite.png)
+
 **Mobile** — single column, 44px targets, no horizontal scroll at any width from 320px up.
 
 <p>
@@ -170,13 +175,13 @@ linked to Stellar Expert.
   <img src="screenshots/05-mobile-detail.png" alt="Circle detail on mobile" width="300">
 </p>
 
-**CI/CD** — every push runs `cargo fmt --check`, the ordered contract build, 47 contract tests,
-then the frontend's lint, 38 tests, and production build. `main` deploys to GitHub Pages.
+**CI/CD** — every push runs `cargo fmt --check`, the ordered contract build, 54 contract tests,
+then the frontend's lint, 49 tests, and production build. `main` deploys to GitHub Pages.
 
 ![CI pipeline](screenshots/06-ci-pipeline.png)
 
-**Tests** — 47 contract tests and 38 frontend tests, all green. Full output in
-[screenshots/test-output.txt](screenshots/test-output.txt).
+**Tests** — 54 contract tests (32 circle, 12 factory, 10 feedback) and 49 frontend tests, all green.
+Full output in [screenshots/test-output.txt](screenshots/test-output.txt).
 
 ![Test output](screenshots/07-test-output.png)
 
@@ -403,7 +408,8 @@ email, and a product rating) so we can reach them, dedupe real people, and track
 form questions and process live in [docs/user-onboarding.md](docs/user-onboarding.md).
 
 - **Onboarding form:** https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform
-- **Responses (Excel export):** [docs/user-feedback.xlsx](docs/user-feedback.xlsx) — _export from the form and commit as responses arrive_
+- **Responses:** exported from the form to `docs/user-feedback.xlsx` and committed as they arrive —
+  see [docs/user-onboarding.md](docs/user-onboarding.md#export-responses-to-excel) for the export steps
 
 ### What we changed from feedback
 
@@ -414,6 +420,16 @@ Real feedback already on-chain from the first pilot circles:
 | A member | *"Wanted a reminder before the round closes."* | A live ticking countdown to each round's deadline, plus an urgent reminder banner that spells out what you owe — [`a95a3ac`](https://github.com/itsgriznft/sandoq/commit/a95a3ac) |
 | New users | Wallet setup was the hard part | A four-step onboarding guide from no wallet to a first on-chain join — [`a95a3ac`](https://github.com/itsgriznft/sandoq/commit/a95a3ac) |
 | A member | Seat order was unclear | Seat grid in payout order with a next-payout highlight — [`3308ace`](https://github.com/itsgriznft/sandoq/commit/3308ace) |
+| Organizers | Getting a group in meant collecting addresses one by one | **Invite links** — one tap sends the circle's URL and its terms to the OS share sheet, and an invitee blocked by a private circle can copy their own address back in one tap — [`9febbfc`](https://github.com/itsgriznft/sandoq/commit/9febbfc) |
+
+**How invite links work.** Every circle is already its own URL — the app keeps the open circle in
+the location hash — so an invite needs nothing on-chain and nothing that can expire. The button
+composes the link plus the circle's terms and hands both to `navigator.share`, which on a phone
+drops the invite straight into the group chat it was meant for; without a share sheet it falls back
+to the clipboard, and without a secure context to the legacy `execCommand` path, so the button is
+never dead. An invite-only circle still needs the organizer to `allow()` the address on-chain, so
+the blocked-visitor notice now carries a **Copy my address** button. See
+[`web/src/lib/invite.ts`](web/src/lib/invite.ts).
 
 ### Next phase (Blue → Black)
 
@@ -423,8 +439,6 @@ Prioritised directly from what users ask for and the roadmap:
 2. **Sealed-bid payout auctions** — let members bid a discount to take the pot early, so early
    positions are earned, not assigned.
 3. **SEP-24 anchor flow** — deposit and withdraw in local currency on testnet.
-4. **Invite links** — one-click invite for private circles, so onboarding a whole group is a single
-   share rather than pasting addresses.
 
 Each ships as its own commit and gets linked back here as it lands.
 
@@ -443,7 +457,7 @@ rustup target add wasm32v1-none
 
 ```bash
 make build   # circle wasm first, then factory — the order matters
-make test    # 47 unit tests
+make test    # 54 unit tests
 ```
 
 > The factory embeds the circle's contract spec via `contractimport!`, so the circle wasm must exist
@@ -473,7 +487,7 @@ Amounts are in **stroops** (1 XLM = 10,000,000 stroops); `period` and `fill_dead
 cd web
 npm install
 npm run dev      # http://localhost:5173
-npm test         # 38 unit tests
+npm test         # 49 unit tests
 npm run lint
 ```
 
@@ -492,6 +506,8 @@ deployments/             what is live, per network
 web/src/lib/rpc.ts       simulate / sign / submit / confirm
 web/src/lib/circle.ts    join, contribute, settle, reclaim, event paging
 web/src/lib/factory.ts   listing, stats, create
+web/src/lib/feedback.ts  the on-chain feedback registry
+web/src/lib/invite.ts    invite links: circle URL, share message, share sheet
 web/src/lib/analytics.ts event tracking + error monitoring
 web/src/hooks/           polling for the registry and one circle
 .github/workflows/       CI (fmt, tests, lint, build) and Pages deploy
