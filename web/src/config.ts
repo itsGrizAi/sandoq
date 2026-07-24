@@ -35,6 +35,10 @@ export const MAX_NAME_LEN = 64;
 export const MIN_MEMBERS = 2;
 export const MAX_MEMBERS = 24;
 
+/** The onboarding / feedback Google Form real users are asked to fill. */
+export const ONBOARDING_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform';
+
 export const txUrl = (hash: string) => `https://stellar.expert/explorer/testnet/tx/${hash}`;
 export const accountUrl = (id: string) => `https://stellar.expert/explorer/testnet/account/${id}`;
 export const contractUrl = (id: string) => `https://stellar.expert/explorer/testnet/contract/${id}`;

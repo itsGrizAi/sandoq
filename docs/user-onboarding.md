@@ -61,7 +61,7 @@ Freighter to a first on-chain join.
 > testnet, where a smart contract holds the pot so no organizer can run off with it. Takes ~2 min
 > to try: connect Freighter (testnet), join a circle, done. Would love your feedback — happy to
 > test yours back!
-> App: https://itsgriznft.github.io/sandoq/ · 1-min form: <FORM LINK>
+> App: https://itsgriznft.github.io/sandoq/ · 1-min form: https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform
 
 **Friends / family (WhatsApp/Telegram):**
 

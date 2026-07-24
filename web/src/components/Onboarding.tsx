@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-import { accountUrl, shortAddress } from '../config';
+import { accountUrl, ONBOARDING_FORM_URL, shortAddress } from '../config';
 import { track } from '../lib/analytics';
 import type { Wallet } from '../hooks/useWallet';
 
@@ -96,10 +96,15 @@ export function Onboarding({
         <li className="onboard__step">
           <span className="onboard__num">4</span>
           <div>
-            <strong>Join a circle</strong>
+            <strong>Join a circle, then tell us how it went</strong>
             <p className="muted">
               Pick a circle marked <em>Filling</em>, press <em>Join</em>, and sign. Joining stakes a
               small, refundable collateral — that&apos;s your first real transaction on Stellar.
+              Afterwards, please fill our{' '}
+              <a href={ONBOARDING_FORM_URL} target="_blank" rel="noreferrer">
+                1-minute form ↗
+              </a>{' '}
+              so we can improve.
             </p>
             <button className="button" onClick={onDone}>
               Show me the circles

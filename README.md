@@ -402,8 +402,8 @@ Expert.
 email, and a product rating) so we can reach them, dedupe real people, and track the cohort. The
 form questions and process live in [docs/user-onboarding.md](docs/user-onboarding.md).
 
-- **Onboarding form:** _add your Google Form link here_
-- **Responses (Excel export):** [docs/user-feedback.xlsx](docs/user-feedback.xlsx) — _export from the form and commit_
+- **Onboarding form:** https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform
+- **Responses (Excel export):** [docs/user-feedback.xlsx](docs/user-feedback.xlsx) — _export from the form and commit as responses arrive_
 
 ### What we changed from feedback
 
