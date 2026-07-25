@@ -35,26 +35,29 @@ Live app: <https://itsgriznft.github.io/sandoq/> · Pitch deck: <https://itsgriz
 > testnet XLM, connect, and join — four steps, about two minutes. Onboarding is the whole game, so
 > we made it frictionless."
 
-## 4 · Connect & join a circle — 0:45–1:10
+## 4 · Connect & join — the circle fills on camera — 0:45–1:15
 
-**[SHOW]** Connect wallet → Freighter → Approve. Open a **Filling** circle → **Join** → sign in
-Freighter → the seat appears in the grid.
+**[SHOW]** Connect wallet → Freighter → Approve. Open **Office lunch fund** (2/3 seats) → **Join** →
+sign in Freighter. The seat lands, the circle hits 3/3 and flips **Filling → Running**, and the
+⏰ reminder appears telling you what you owe.
 
 **[SAY]**
 > "Let me join one. I connect Freighter, pick an open circle, and press Join — that stakes a small,
-> refundable collateral. I sign… and that's a real transaction on Stellar testnet. My seat is now
-> on-chain, in the payout order."
+> refundable collateral. I sign… and that's a real transaction on Stellar testnet. That was the last
+> seat, so the circle just started — and because I'm a member now, it's telling me what I owe this
+> round and counting down to the deadline. Users asked for exactly that nudge, so we built it."
 
-## 5 · A running circle + the reminder — 1:10–1:35
+**[SHOW]** Optionally press **Contribute 5 XLM** and sign — a second real transaction.
 
-**[SHOW]** Open a **running** circle. Point at the seat grid (paid / due / next-payout, a
-*received* badge), then the **⏰ round countdown reminder** ticking down.
+## 5 · A circle mid-rotation — 1:15–1:35
+
+**[SHOW]** Back to circles → open **Neighbors sandoq** (Running, round 2 of 3). Point at the seat
+grid: paid / due / next-payout, and the *received* badge on the member already paid out.
 
 **[SAY]**
-> "Here's a circle mid-rotation. The seats are the payout order — you can see who's paid, who's due,
-> who's next, and this member already received their round's pot on-chain. Users asked for a nudge
-> before a round closes, so there's now a live countdown and a reminder of exactly what you owe. A
-> missed round is covered from that member's own stake first."
+> "Here's one further along. The seats are the payout order — who's paid, who's due, who's next —
+> and this member already received their round's pot on-chain. A missed round is covered from that
+> member's own stake before it can ever touch the recipient."
 
 ## 6 · On-chain feedback — 1:35–1:50
 
@@ -77,11 +80,42 @@ on Stellar Expert.
 
 ---
 
+### The state this script expects
+
+Testnet is already staged for it — these circles are live right now:
+
+| Circle | State | Used in |
+|---|---|---|
+| **Office lunch fund** `CBN7PM4F…IEES` | Filling, **2 of 3 seats**, 5 XLM every 12 hours | §4 — your join takes the last seat, so it starts on camera and the ⏰ reminder is *yours* |
+| **Neighbors sandoq** `CBWAYGCU…2RRK` | Running, round 2 of 3, one member already paid out | §5 — seat grid, *received* badge |
+| **Pilot circle** · **Community sandoq** | Filling, open seats | §2 — a home page with something on it |
+| **Family circle** `CC5XZRGT…UBCR` | 🔒 invite-only, Filling | optional — the lock badge and invite gating |
+
+If **Office lunch fund** is already full by the time you record, make another the same way:
+
+```bash
+stellar contract invoke --id CB73QYCRM7BXR52W6FUTNCF6SVLAD26QTLUJCPMOKVKI7A6FPGNBVHRC \
+  --source deployer --network testnet -- create \
+  --organizer "$(stellar keys address deployer)" --name "Office lunch fund" \
+  --contribution 50000000 --period 43200 --size 3 --collateral 50000000 \
+  --fill_deadline $(( $(date +%s) + 604800 )) --private false
+# then have two identities take seats, leaving one open:
+stellar contract invoke --id <new circle> --source alice --network testnet -- join --member "$(stellar keys address alice)"
+stellar contract invoke --id <new circle> --source bob   --network testnet -- join --member "$(stellar keys address bob)"
+```
+
 ### Recording notes
 
-- Have the app open, Freighter unlocked on Testnet, and a funded account before you start.
-- Open circles are ready to join; a running circle (with a paid-out round) is ready for section 5.
-- For the reminder in section 5 to show *your* countdown, be a member of that circle; otherwise just
-  point at the round countdown in the header.
+- Freighter must be **unlocked and on Testnet**, with a funded account — grab XLM from
+  [friendbot](https://lab.stellar.org/account/fund) if the balance is thin.
+- Record a 1600×1000 browser window; that keeps the two-column circle detail on screen without
+  scrolling mid-sentence.
+- Let the Freighter pop-ups sit on camera for a beat — the signatures are the proof of real wallet
+  interaction, and they are what the reviewer is looking for.
 - If a step fails, just retry — every action is idempotent from the UI's point of view.
 - Under two-and-a-half minutes is ideal. Sections 3–6 are the core; 1–2 and 7 are the frame.
+- **Afterwards**, refresh the user record so the new transactions land in the repo:
+
+  ```bash
+  node scripts/export-users.mjs && python scripts/build-workbook.py
+  ```
