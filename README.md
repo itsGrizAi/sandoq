@@ -25,7 +25,7 @@ Builder Team before development began.
 | Requirement | Where it is | Status |
 |---|---|---|
 | Public GitHub repository | [github.com/itsgriznft/sandoq](https://github.com/itsgriznft/sandoq) | ✅ |
-| 20+ meaningful commits | `git log` — 28 and counting | ✅ |
+| 20+ meaningful commits | [commit history](https://github.com/itsgriznft/sandoq/commits/main) — well past 20 | ✅ |
 | Live deployed application | [itsgriznft.github.io/sandoq](https://itsgriznft.github.io/sandoq/) | ✅ |
 | Pitch deck (problem, solution, market, architecture, growth, roadmap) | [pitch.html](https://itsgriznft.github.io/sandoq/pitch.html) · source [`web/public/pitch.html`](web/public/pitch.html) | ✅ |
 | Google Form collecting wallet, email, name, rating | [form](https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform) · questions in [docs/user-onboarding.md](docs/user-onboarding.md) | ✅ |
