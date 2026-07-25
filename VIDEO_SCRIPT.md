@@ -1,8 +1,14 @@
 # Sandoq — demo video script
 
 A full product walkthrough (~2 min) for Level 5. **[SHOW]** is what's on screen,
-**[SAY]** is the line to read. Speak slowly and let the Freighter pop-ups appear on
-camera — the signatures are the proof of real wallet interactions.
+**[SAY]** is the line to read. Let the Freighter pop-ups appear on camera — the
+signatures are the proof of real wallet interactions, so capture the **display**,
+not just the browser window; a wallet pop-up is its own window and a window
+capture will miss it.
+
+Recording the screen silently and adding a voice-over afterwards? The narration
+alone, with per-section timings, is in
+[docs/demo-narration.md](docs/demo-narration.md).
 
 Live app: <https://itsgriznft.github.io/sandoq/> · Pitch deck: <https://itsgriznft.github.io/sandoq/pitch.html>
 
