@@ -28,11 +28,23 @@ two wallets). Add a one-line description:
 
 ### Export responses to Excel
 
+`docs/user-feedback.xlsx` already exists and is linked from the README. It has three sheets:
+**Summary**, **On-chain activity** (generated from testnet), and **Form responses** (the sheet the
+Google export goes into).
+
 1. In the form, open the **Responses** tab → the green Sheets icon → *Create spreadsheet*.
 2. In the sheet: **File → Download → Microsoft Excel (.xlsx)**.
-3. Save it as `docs/user-feedback.xlsx` in this repo and commit it. The README already links there.
-4. Re-export and re-commit as more responses come in — the commit history itself is the proof of a
-   growing cohort.
+3. Paste the rows into the **Form responses** sheet of `docs/user-feedback.xlsx`, keeping the
+   existing column order.
+4. Refresh the on-chain half whenever you like — a rebuild carries the pasted survey rows over:
+
+   ```bash
+   node scripts/export-users.mjs      # docs/user-activity.csv, read live from testnet
+   python scripts/build-workbook.py   # rebuilds docs/user-feedback.xlsx (needs: pip install openpyxl)
+   ```
+
+5. Commit both files. Re-export and re-commit as more responses come in — the commit history itself
+   is the proof of a growing cohort.
 
 ---
 

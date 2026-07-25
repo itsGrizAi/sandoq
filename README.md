@@ -20,6 +20,23 @@ Builder Team before development began.
 
 **Live demo:** https://itsgriznft.github.io/sandoq/ · **Pitch deck:** https://itsgriznft.github.io/sandoq/pitch.html · **New here?** [Join a circle in 5 minutes →](ONBOARDING.md)
 
+### Level 5 submission — where each item lives
+
+| Requirement | Where it is | Status |
+|---|---|---|
+| Public GitHub repository | [github.com/itsgriznft/sandoq](https://github.com/itsgriznft/sandoq) | ✅ |
+| 20+ meaningful commits | `git log` — 28 and counting | ✅ |
+| Live deployed application | [itsgriznft.github.io/sandoq](https://itsgriznft.github.io/sandoq/) | ✅ |
+| Pitch deck (problem, solution, market, architecture, growth, roadmap) | [pitch.html](https://itsgriznft.github.io/sandoq/pitch.html) · source [`web/public/pitch.html`](web/public/pitch.html) | ✅ |
+| Google Form collecting wallet, email, name, rating | [form](https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform) · questions in [docs/user-onboarding.md](docs/user-onboarding.md) | ✅ |
+| Responses exported to an Excel sheet, linked here | [docs/user-feedback.xlsx](docs/user-feedback.xlsx) | ✅ |
+| Screenshots of analytics / transaction activity | [Screenshots](#screenshots) — analytics panel, live feed, tests | ✅ |
+| User-feedback iteration summary with commit links | [What we changed from feedback](#what-we-changed-from-feedback) | ✅ |
+| Next-phase plan built from that feedback | [Next phase](#next-phase-blue--black) | ✅ |
+| Updated documentation | this README · [ONBOARDING.md](ONBOARDING.md) · [docs/](docs/) | ✅ |
+| Proof of 50+ users with real transaction activity | [docs/user-activity.csv](docs/user-activity.csv) — **8 wallets so far**, generated from chain | 🔸 in progress |
+| Demo video walkthrough | script ready in [VIDEO_SCRIPT.md](VIDEO_SCRIPT.md) | 🔸 recording |
+
 ---
 
 ## How a circle works
@@ -410,8 +427,28 @@ email, and a product rating) so we can reach them, dedupe real people, and track
 form questions and process live in [docs/user-onboarding.md](docs/user-onboarding.md).
 
 - **Onboarding form:** https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform
-- **Responses:** exported from the form to `docs/user-feedback.xlsx` and committed as they arrive —
-  see [docs/user-onboarding.md](docs/user-onboarding.md#export-responses-to-excel) for the export steps
+- **User record (Excel):** [docs/user-feedback.xlsx](docs/user-feedback.xlsx) — *Summary*,
+  *On-chain activity*, and the *Form responses* export
+- **On-chain activity (CSV):** [docs/user-activity.csv](docs/user-activity.csv)
+
+### Proof of users, not a claim of them
+
+The on-chain sheet is not typed by hand. [`scripts/export-users.mjs`](scripts/export-users.mjs)
+reads the factory registry, every circle's `members()`, and the feedback registry live from testnet
+and writes the CSV; [`scripts/build-workbook.py`](scripts/build-workbook.py) turns that into the
+workbook. Re-run both and you get the same rows — or paste any wallet into Stellar Expert and see
+its transactions yourself.
+
+```bash
+node scripts/export-users.mjs      # docs/user-activity.csv, straight from chain
+python scripts/build-workbook.py   # docs/user-feedback.xlsx
+```
+
+Where it stands right now: **8 distinct wallets** have touched the contracts, **7** left signed
+on-chain feedback averaging **4.57 / 5**, across **4 circles** (one mid-rotation, one invite-only).
+Those are the honest current numbers, printed by the script above — the Level 5 target of 50 is
+what the [onboarding playbook](docs/user-onboarding.md) is for, and every new joiner shows up in
+the next export.
 
 ### What we changed from feedback
 
