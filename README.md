@@ -13,8 +13,10 @@ member vanishes the round after collecting, records live in someone's head, and 
 arbiter. Sandoq keeps the social structure and removes those failure modes — **nobody, not even the
 organizer, ever holds the money.**
 
-Built for **Level 4 — Green Belt** of the [Stellar Journey to Mastery](https://www.risein.com/programs/stellar-journey-to-mastery-monthly-builder-challenges)
-builder challenge. Idea approved by the Stellar Builder Team before development began.
+Built for the [Stellar Journey to Mastery](https://www.risein.com/programs/stellar-journey-to-mastery-monthly-builder-challenges)
+builder challenge — shipped as the **Level 4 (Green Belt)** MVP and carried into **Level 5 (Blue
+Belt)** with real users, feedback-driven iteration, and a pitch deck. Idea approved by the Stellar
+Builder Team before development began.
 
 **Live demo:** https://itsgriznft.github.io/sandoq/ · **Pitch deck:** https://itsgriznft.github.io/sandoq/pitch.html · **New here?** [Join a circle in 5 minutes →](ONBOARDING.md)
 
