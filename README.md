@@ -18,7 +18,7 @@ builder challenge — shipped as the **Level 4 (Green Belt)** MVP and carried in
 Belt)** with real users, feedback-driven iteration, and a pitch deck. Idea approved by the Stellar
 Builder Team before development began.
 
-**Live demo:** https://itsgriznft.github.io/sandoq/ · **Pitch deck:** https://itsgriznft.github.io/sandoq/pitch.html · **New here?** [Join a circle in 5 minutes →](ONBOARDING.md)
+**Live demo:** https://itsgriznft.github.io/sandoq/ · **Pitch deck:** https://itsgriznft.github.io/sandoq/pitch.html · **Demo video:** [3-minute walkthrough →](https://github.com/itsgriznft/sandoq/blob/main/screenshots/demo.mp4) · **New here?** [Join a circle in 5 minutes →](ONBOARDING.md)
 
 ### Level 5 submission — where each item lives
 
@@ -34,8 +34,8 @@ Builder Team before development began.
 | User-feedback iteration summary with commit links | [What we changed from feedback](#what-we-changed-from-feedback) | ✅ |
 | Next-phase plan built from that feedback | [Next phase](#next-phase-blue--black) | ✅ |
 | Updated documentation | this README · [ONBOARDING.md](ONBOARDING.md) · [docs/](docs/) | ✅ |
-| Proof of 50+ users with real transaction activity | [docs/user-activity.csv](docs/user-activity.csv) — **8 wallets so far**, generated from chain | 🔸 in progress |
-| Demo video walkthrough | script ready in [VIDEO_SCRIPT.md](VIDEO_SCRIPT.md) | 🔸 recording |
+| Demo video walkthrough | [screenshots/demo.mp4](https://github.com/itsgriznft/sandoq/blob/main/screenshots/demo.mp4) — 3 minutes, narrated | ✅ |
+| Proof of 50+ users with real transaction activity | [docs/user-activity.csv](docs/user-activity.csv) — **9 wallets so far**, generated from chain | 🔸 in progress |
 
 ---
 
@@ -161,6 +161,12 @@ sha256 is exactly the hash the factory deploys from.
 ---
 
 ## Screenshots
+
+**Demo video** — a three-minute narrated walkthrough: connect a wallet, take the last seat in a
+circle so it starts on camera, contribute, read a circle mid-rotation, and leave signed on-chain
+feedback. Every wallet pop-up and confirmation in it is a real testnet transaction.
+
+▶️ **[screenshots/demo.mp4](https://github.com/itsgriznft/sandoq/blob/main/screenshots/demo.mp4)**
 
 **Circles** — every card and the header stats are cross-contract reads from the factory.
 
@@ -444,8 +450,8 @@ node scripts/export-users.mjs      # docs/user-activity.csv, straight from chain
 python scripts/build-workbook.py   # docs/user-feedback.xlsx
 ```
 
-Where it stands right now: **8 distinct wallets** have touched the contracts, **7** left signed
-on-chain feedback averaging **4.57 / 5**, across **4 circles** (one mid-rotation, one invite-only).
+Where it stands right now: **9 distinct wallets** have touched the contracts, **8** left signed
+on-chain feedback averaging **4.5 / 5**, across **5 circles** (two mid-rotation, one invite-only).
 Those are the honest current numbers, printed by the script above — the Level 5 target of 50 is
 what the [onboarding playbook](docs/user-onboarding.md) is for, and every new joiner shows up in
 the next export.
