@@ -33,10 +33,18 @@ two wallets). Add a one-line description:
 Google export goes into).
 
 1. In the form, open the **Responses** tab → the green Sheets icon → *Create spreadsheet*.
-2. In the sheet: **File → Download → Microsoft Excel (.xlsx)**.
-3. Paste the rows into the **Form responses** sheet of `docs/user-feedback.xlsx`, keeping the
-   existing column order.
-4. Refresh the on-chain half whenever you like — a rebuild carries the pasted survey rows over:
+2. In the sheet: **File → Download → Microsoft Excel (.xlsx)**. Comma-separated values works too.
+3. Import it — no pasting, no column shuffling:
+
+   ```bash
+   python scripts/build-workbook.py --form ~/Downloads/responses.xlsx
+   ```
+
+   Columns are matched by wording rather than position, so rewording a question later doesn't break
+   the import. The answers land in `docs/form-responses.csv`, committed next to the workbook: later
+   rebuilds read that file, and a reviewer can read the responses straight from the diff.
+
+4. Refresh the on-chain half whenever you like — a rebuild keeps the survey rows:
 
    ```bash
    node scripts/export-users.mjs      # docs/user-activity.csv, read live from testnet
@@ -45,6 +53,9 @@ Google export goes into).
 
 5. Commit both files. Re-export and re-commit as more responses come in — the commit history itself
    is the proof of a growing cohort.
+
+The Summary sheet also counts how many form answers give a wallet that shows up on chain. Those are
+the strongest rows in the record: a named person attached to a transaction anyone can verify.
 
 ---
 
