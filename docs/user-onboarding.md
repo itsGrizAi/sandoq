@@ -57,6 +57,13 @@ Google export goes into).
 The Summary sheet also counts how many form answers give a wallet that shows up on chain. Those are
 the strongest rows in the record: a named person attached to a transaction anyone can verify.
 
+**Watch that number, not the response count.** In the first ten responses, nine gave a real funded
+testnet account but only one had actually transacted with Sandoq — including people who reported
+joining a circle. The likeliest cause is typing a different address than the one they connected
+with, since most already had testnet wallets from other projects. When you share the form, ask
+people to **copy the address out of the app's wallet bar** rather than typing one from memory, and
+to fill the form *after* they join rather than before.
+
 ---
 
 ## 2. Getting to 50 real users

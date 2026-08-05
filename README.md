@@ -28,8 +28,8 @@ Builder Team before development began.
 | 20+ meaningful commits | [commit history](https://github.com/itsgriznft/sandoq/commits/main) — well past 20 | ✅ |
 | Live deployed application | [itsgriznft.github.io/sandoq](https://itsgriznft.github.io/sandoq/) | ✅ |
 | Pitch deck (problem, solution, market, architecture, growth, roadmap) | [pitch.html](https://itsgriznft.github.io/sandoq/pitch.html) · source [`web/public/pitch.html`](web/public/pitch.html) | ✅ |
-| Google Form collecting wallet, email, name, rating | [form](https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform) · questions in [docs/user-onboarding.md](docs/user-onboarding.md) | ✅ |
-| Responses exported to an Excel sheet, linked here | [docs/user-feedback.xlsx](docs/user-feedback.xlsx) | ✅ |
+| Google Form collecting wallet, email, name, rating | [form](https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform) · **10 responses**, avg **4.7 / 5** · questions in [docs/user-onboarding.md](docs/user-onboarding.md) | ✅ |
+| Responses exported to an Excel sheet, linked here | [docs/user-feedback.xlsx](docs/user-feedback.xlsx) · raw [docs/form-responses.csv](docs/form-responses.csv) | ✅ |
 | Screenshots of analytics / transaction activity | [Screenshots](#screenshots) — analytics panel, live feed, tests | ✅ |
 | User-feedback iteration summary with commit links | [What we changed from feedback](#what-we-changed-from-feedback) | ✅ |
 | Next-phase plan built from that feedback | [Next phase](#next-phase-blue--black) | ✅ |
@@ -452,9 +452,16 @@ python scripts/build-workbook.py   # docs/user-feedback.xlsx
 
 Where it stands right now: **9 distinct wallets** have touched the contracts, **8** left signed
 on-chain feedback averaging **4.5 / 5**, across **5 circles** (two mid-rotation, one invite-only).
-Those are the honest current numbers, printed by the script above — the Level 5 target of 50 is
-what the [onboarding playbook](docs/user-onboarding.md) is for, and every new joiner shows up in
-the next export.
+Alongside that, **10 people filled the survey**, rating it **4.7 / 5**.
+
+Those two numbers describe different things and the gap between them is the honest state of this
+level. Nine of the ten survey wallets are real, funded testnet accounts — but only one of them has
+a Sandoq transaction against it. Several people who reported joining a circle gave an address that
+never touched the contracts, most likely because they typed a different wallet than the one they
+connected with. The Summary sheet counts the overlap rather than the larger number, since Level 5
+asks for interactions that can be verified, not for reported ones. Closing that gap — and reaching
+50 — is what the [onboarding playbook](docs/user-onboarding.md) is for, and every new joiner shows
+up in the next export.
 
 ### What we changed from feedback
 
