@@ -96,6 +96,13 @@ position makes.
 > A future refinement can lower this to `(size − 1) × contribution` by requiring a member to have
 > paid their own round in cash before they can receive — a design choice on the roadmap.
 
+That dial used to live only in this table, which meant the number that actually matters was
+invisible at the moment someone decided to stake. It is now on-chain and on-screen: `trust_gap()`
+returns exactly what a member could gain by taking their pot and never paying in, the create form
+names that amount live as the terms are typed, and every circle carries a **trustless** or **needs
+trust** badge. See [docs/security-review.md](docs/security-review.md) — it was the first of three
+findings, and the freeloader's profit is now pinned to the token by a test.
+
 So Sandoq doesn't manufacture trust between strangers; it **removes the need for a trusted
 organizer** and lets each circle pick where it sits on that dial. That widens who can safely run a
 circle — from people who deeply trust each other to loose communities who don't. (A future on-chain
@@ -200,12 +207,12 @@ clipboard. A 🔒 circle is invite-only, so the organizer still has to allow the
   <img src="screenshots/05-mobile-detail.png" alt="Circle detail on mobile" width="300">
 </p>
 
-**CI/CD** — every push runs `cargo fmt --check`, the ordered contract build, 54 contract tests,
+**CI/CD** — every push runs `cargo fmt --check`, the ordered contract build, 60 contract tests,
 then the frontend's lint, 49 tests, and production build. `main` deploys to GitHub Pages.
 
 ![CI pipeline](screenshots/06-ci-pipeline.png)
 
-**Tests** — 54 contract tests (32 circle, 12 factory, 10 feedback) and 49 frontend tests, all green.
+**Tests** — 60 contract tests (36 circle, 14 factory, 10 feedback) and 53 frontend tests, all green.
 Full output in [screenshots/test-output.txt](screenshots/test-output.txt).
 
 ![Test output](screenshots/07-test-output.png)
@@ -491,8 +498,19 @@ Prioritised directly from what users ask for and the roadmap:
 2. **Sealed-bid payout auctions** — let members bid a discount to take the pot early, so early
    positions are earned, not assigned.
 3. **SEP-24 anchor flow** — deposit and withdraw in local currency on testnet.
+4. **Stablecoin settlement** — two of the ten survey responses asked for it directly, and a savings
+   circle denominated in something that does not move is the version people would actually use.
 
 Each ships as its own commit and gets linked back here as it lands.
+
+### Security
+
+Before any mainnet deployment the contracts were reviewed end to end:
+**[docs/security-review.md](docs/security-review.md)**. Three issues, all reproduced with a test
+before being fixed, all now pinned by regression tests — a configuration in which defaulting was
+profitable, an unbounded round length that could strand every stake, and a single circle able to
+break the registry read for everyone. The review also lists what was checked and found sound, and
+what has to be settled before mainnet.
 
 ---
 
@@ -509,7 +527,7 @@ rustup target add wasm32v1-none
 
 ```bash
 make build   # circle wasm first, then factory — the order matters
-make test    # 54 unit tests
+make test    # 60 unit tests
 ```
 
 > The factory embeds the circle's contract spec via `contractimport!`, so the circle wasm must exist

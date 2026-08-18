@@ -35,6 +35,26 @@ export const MAX_NAME_LEN = 64;
 export const MIN_MEMBERS = 2;
 export const MAX_MEMBERS = 24;
 
+/** Round length bounds the contract enforces, in seconds. */
+export const MIN_PERIOD = 3_600;
+export const MAX_PERIOD = 365 * 24 * 3_600;
+
+/**
+ * How much a member could gain by taking their pot and never paying in.
+ *
+ * The rotation does not skip a defaulter, so someone who never contributes
+ * still receives one pot; all they forfeit is their stake. Zero means the
+ * circle is trustless — defaulting cannot profit, whoever joins.
+ *
+ * Low stakes are a legitimate choice for people who already trust each other,
+ * which is most of what Sandoq is for. The number just has to be visible
+ * before anyone commits, rather than left implicit in the arithmetic.
+ */
+export function trustGap(contribution: bigint, collateral: bigint, size: number): bigint {
+  const gap = contribution * BigInt(size) - collateral;
+  return gap > 0n ? gap : 0n;
+}
+
 /** The onboarding / feedback Google Form real users are asked to fill. */
 export const ONBOARDING_FORM_URL =
   'https://docs.google.com/forms/d/e/1FAIpQLSd-xWgr5Y-mCbFkxkCJxT8Jq3lwpHHj1JbRVZPpLPmY-POSng/viewform';

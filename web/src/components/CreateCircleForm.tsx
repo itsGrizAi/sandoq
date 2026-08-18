@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 
-import { MAX_MEMBERS, MAX_NAME_LEN, MIN_MEMBERS, parseXlm } from '../config';
+import { MAX_MEMBERS, MAX_NAME_LEN, MIN_MEMBERS, formatXlm, parseXlm, trustGap } from '../config';
 import { AppError, classifyError } from '../lib/errors';
 import { createCircle } from '../lib/factory';
 import type { TxProgress, TxStage } from '../lib/rpc';
@@ -36,6 +36,16 @@ export function CreateCircleForm({ wallet, progress, onProgress, onCreated, onCa
   const [collateral, setCollateral] = useState('25');
   const [fillDays, setFillDays] = useState(7);
   const [isPrivate, setIsPrivate] = useState(false);
+
+  // What a member could walk away with by never paying in. Shown live, because
+  // it is the one term of a circle that is not on the form anywhere else.
+  const gap = (() => {
+    try {
+      return trustGap(parseXlm(contribution), parseXlm(collateral), size);
+    } catch {
+      return null;
+    }
+  })();
 
   // Remember how far the transaction got, so a failure can say where it
   // stopped instead of greying out stages that actually succeeded.
@@ -168,6 +178,24 @@ export function CreateCircleForm({ wallet, progress, onProgress, onCreated, onCa
             <small className="muted">Covers rounds a member misses.</small>
           </label>
         </div>
+
+        {gap !== null && (
+          <p className={`trust ${gap === 0n ? 'trust--sound' : 'trust--thin'}`}>
+            {gap === 0n ? (
+              <>
+                <strong>Trustless.</strong> The stake covers a whole pot, so nobody can gain by
+                taking their payout and walking away.
+              </>
+            ) : (
+              <>
+                <strong>Needs trust.</strong> A member could take their pot, never pay in, and come
+                out <strong>{formatXlm(gap)} XLM</strong> ahead — the rest of the circle absorbs it.
+                Fine among people who know each other; raise the stake to {formatXlm(parseXlm(contribution) * BigInt(size))} XLM to
+                remove it entirely.
+              </>
+            )}
+          </p>
+        )}
 
         <fieldset className="field" disabled={disabled}>
           <span>Round length</span>

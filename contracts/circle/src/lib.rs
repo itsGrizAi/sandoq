@@ -57,6 +57,26 @@ const MAX_NAME_LEN: u32 = 64;
 const MAX_MEMBERS: u32 = 24;
 const MIN_MEMBERS: u32 = 2;
 
+/// A round has to be long enough that members can actually pay inside it.
+/// Without a floor an organizer could open a circle whose rounds expire
+/// instantly, join first, and settle straight away: nobody would have had a
+/// chance to contribute, every miss would be slashed, and the whole pot of
+/// slashed collateral would land on the first seat. One hour is short enough
+/// for a demo and long enough that the window is real.
+const MIN_PERIOD: u64 = 3_600;
+
+/// And short enough that `start + size * period` cannot overflow the ledger
+/// clock. Without a ceiling, a period near `u64::MAX` makes every `contribute`
+/// and `settle` panic on that multiplication - which strands the collateral,
+/// since only `settle` can reach the `Complete` that `reclaim` requires.
+const MAX_PERIOD: u64 = 365 * 24 * 3_600;
+
+/// No Stellar asset can exceed `i64::MAX` of its own units, so nothing above
+/// this is a real amount. Refusing larger values keeps every sum in this
+/// contract - and in the factory's aggregate, which multiplies by size twice -
+/// far away from an `i128` overflow.
+const MAX_AMOUNT: i128 = i64::MAX as i128;
+
 #[contracttype]
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Status {
@@ -252,13 +272,16 @@ impl Circle {
         if contribution <= 0 {
             panic_with_error!(&env, Error::InvalidContribution);
         }
-        if period == 0 {
+        if contribution > MAX_AMOUNT {
+            panic_with_error!(&env, Error::InvalidContribution);
+        }
+        if !(MIN_PERIOD..=MAX_PERIOD).contains(&period) {
             panic_with_error!(&env, Error::InvalidPeriod);
         }
         if !(MIN_MEMBERS..=MAX_MEMBERS).contains(&size) {
             panic_with_error!(&env, Error::InvalidSize);
         }
-        if collateral < 0 {
+        if !(0..=MAX_AMOUNT).contains(&collateral) {
             panic_with_error!(&env, Error::InvalidCollateral);
         }
         if fill_deadline <= env.ledger().timestamp() {
@@ -601,6 +624,31 @@ impl Circle {
             round: Self::get(&env, &DataKey::Round, 0u32),
             paid_this_round: Self::get(&env, &DataKey::PaidCount, 0u32),
         }
+    }
+
+    /// How much a member could gain by taking their pot and never paying in,
+    /// in token units. Zero means the circle is trustless: defaulting cannot
+    /// profit, whoever joins.
+    ///
+    /// A member who never contributes forfeits their collateral - at most one
+    /// contribution per round - and still receives one pot, because the
+    /// rotation does not skip a defaulter. So the most they can walk away with
+    /// is a full pot less whatever their stake covered:
+    ///
+    /// ```text
+    /// gap = max(0, size * contribution - collateral)
+    /// ```
+    ///
+    /// This is not a bug being reported; it is the dial the organizer sets.
+    /// Low collateral is the point for a circle of people who already trust
+    /// each other, and it is why Sandoq is not a product for strangers. What
+    /// matters is that the number is public before anyone stakes, rather than
+    /// buried in the arithmetic - so the frontend shows it, and so can anyone
+    /// else reading the chain.
+    pub fn trust_gap(env: Env) -> i128 {
+        let config = Self::config(&env);
+        let pot = config.contribution * config.size as i128;
+        (pot - config.collateral).max(0)
     }
 
     pub fn members(env: Env) -> Vec<Address> {

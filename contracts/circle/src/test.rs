@@ -1,5 +1,9 @@
 #![cfg(test)]
 
+// The contract is no_std; the test harness needs std to catch a constructor
+// panic and assert on it.
+extern crate std;
+
 use super::*;
 use soroban_sdk::{
     testutils::{Address as _, Events, Ledger},
@@ -677,4 +681,83 @@ fn a_public_circle_admits_anyone() {
     // No invite needed; can_join is always true and join succeeds.
     assert!(s.contract.can_join(&s.dave));
     assert_eq!(s.contract.join(&s.dave), 1);
+}
+
+// ------------------------------------------------------------ safety bounds
+
+/// Register a circle with an arbitrary period, everything else sane.
+fn try_register_period(period: u64) -> Result<(), ()> {
+    let env = Env::default();
+    env.mock_all_auths();
+    env.ledger().set_timestamp(1_000_000);
+    let sac = env.register_stellar_asset_contract_v2(Address::generate(&env));
+    let fill_deadline = env.ledger().timestamp() + 7 * DAY;
+
+    let args = (
+        sac.address(),
+        Address::generate(&env),
+        String::from_str(&env, "Probe"),
+        CONTRIBUTION,
+        period,
+        SIZE,
+        COLLATERAL,
+        fill_deadline,
+        false,
+    );
+    // The constructor panics on a bad period, which unwinds out of `register`.
+    match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| env.register(Circle, args))) {
+        Ok(_) => Ok(()),
+        Err(_) => Err(()),
+    }
+}
+
+#[test]
+fn a_period_near_the_clock_limit_is_refused() {
+    // Accepting it would strand every join: `start + round * period` overflows,
+    // so contribute and settle panic forever and the collateral can never reach
+    // the Complete status reclaim needs.
+    assert!(try_register_period(u64::MAX).is_err());
+    assert!(try_register_period(MAX_PERIOD + 1).is_err());
+    assert!(try_register_period(MAX_PERIOD).is_ok());
+}
+
+#[test]
+fn an_instant_round_is_refused() {
+    // A one-second round lets the organizer take the first seat, settle before
+    // anyone can pay, and collect every slashed stake as the round-0 pot.
+    assert!(try_register_period(1).is_err());
+    assert!(try_register_period(MIN_PERIOD - 1).is_err());
+    assert!(try_register_period(MIN_PERIOD).is_ok());
+}
+
+#[test]
+fn trust_gap_is_zero_only_when_the_stake_covers_a_whole_pot() {
+    // The demo settings: one contribution of stake against a three-way pot.
+    let thin = setup_with(100, 100);
+    assert_eq!(thin.contract.trust_gap(), 200);
+
+    // Stake the whole pot and defaulting can no longer pay.
+    let full = setup_with(100, 100 * SIZE as i128);
+    assert_eq!(full.contract.trust_gap(), 0);
+}
+
+#[test]
+fn the_trust_gap_is_exactly_what_a_freeloader_walks_away_with() {
+    let s = setup_with(100, 100);
+    let gap = s.contract.trust_gap();
+    fill(&s);
+
+    // Alice holds the first seat and never contributes a thing.
+    let opening = s.token.balance(&s.alice) + COLLATERAL;
+    for _ in 0..SIZE {
+        s.contract.contribute(&s.bob);
+        s.contract.contribute(&s.carol);
+        s.env
+            .ledger()
+            .set_timestamp(s.env.ledger().timestamp() + WEEK);
+        s.contract.settle();
+    }
+    let _ = s.contract.try_reclaim(&s.alice);
+
+    assert_eq!(s.token.balance(&s.alice) - opening, gap);
 }

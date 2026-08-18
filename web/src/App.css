@@ -1562,3 +1562,39 @@ a {
 .countdown--over {
   color: var(--muted);
 }
+
+/* ------------------------------------------------------------- trust dial */
+
+/* How much a member could gain by taking their pot and never paying in. It is
+   a property of the terms, not a fault, so the sound case is stated as calmly
+   as the thin one — the point is that neither is invisible before you stake. */
+.shield {
+  color: var(--live);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.shield--thin {
+  color: var(--warn);
+}
+
+.trust {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--live);
+  border-radius: 10px;
+  background: rgba(61, 220, 151, 0.07);
+  color: var(--text);
+  font-size: 0.85rem;
+  line-height: 1.55;
+}
+
+.trust--thin {
+  border-left-color: var(--warn);
+  background: rgba(255, 169, 77, 0.08);
+}
+
+.trust strong {
+  color: inherit;
+}

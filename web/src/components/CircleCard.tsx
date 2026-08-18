@@ -1,4 +1,4 @@
-import { formatPeriod, formatXlm, isClosed, timeLeft } from '../config';
+import { formatPeriod, formatXlm, isClosed, timeLeft, trustGap } from '../config';
 import type { Row } from '../lib/factory';
 
 export function StatusPill({ status, fillDeadline }: { status: Row['status']; fillDeadline: bigint }) {
@@ -35,6 +35,22 @@ export function CircleCard({ row, onOpen }: { row: Row; onOpen: () => void }) {
       <p className="muted">
         {formatXlm(row.contribution)} XLM {formatPeriod(row.period)} ·{' '}
         {formatXlm(row.collateral)} XLM stake
+        {trustGap(row.contribution, row.collateral, row.size) === 0n ? (
+          <span className="shield" title="The stake covers a whole pot — defaulting cannot profit">
+            {' '}
+            · trustless
+          </span>
+        ) : (
+          <span
+            className="shield shield--thin"
+            title={`A member could default and come out ${formatXlm(
+              trustGap(row.contribution, row.collateral, row.size),
+            )} XLM ahead — join people you know`}
+          >
+            {' '}
+            · needs trust
+          </span>
+        )}
       </p>
 
       <div className="progress" role="progressbar" aria-valuenow={Math.round(percent)}

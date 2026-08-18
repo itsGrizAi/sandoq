@@ -393,3 +393,91 @@ fn create_can_deploy_a_private_circle() {
     assert!(!c.can_join(&s.bob));
     assert!(c.can_join(&s.alice));
 }
+
+// ------------------------------------------------------------ safety bounds
+
+#[test]
+fn create_refuses_terms_that_would_strand_or_grief() {
+    let s = setup();
+    let ok = |r: &Result<Result<Address, _>, _>| r.is_ok();
+
+    // A period near the clock limit overflows the circle's round arithmetic,
+    // which strands every stake that was joined before anyone noticed.
+    assert!(!ok(&s.factory.try_create(
+        &s.alice,
+        &name(&s.env, "forever"),
+        &100,
+        &u64::MAX,
+        &3,
+        &100,
+        &s.fill_deadline,
+        &false,
+    )));
+
+    // A one-second round expires before anyone can pay, handing the first seat
+    // every other member's slashed collateral.
+    assert!(!ok(&s.factory.try_create(
+        &s.alice,
+        &name(&s.env, "instant"),
+        &100,
+        &1,
+        &3,
+        &100,
+        &s.fill_deadline,
+        &false,
+    )));
+
+    // An absurd contribution costs the attacker nothing to create and used to
+    // overflow the registry-wide total, taking `stats` down for everyone.
+    assert!(!ok(&s.factory.try_create(
+        &s.alice,
+        &name(&s.env, "grief"),
+        &(i128::MAX / 2),
+        &WEEK,
+        &24,
+        &0,
+        &s.fill_deadline,
+        &false,
+    )));
+
+    // Nothing above got deployed, and the registry still reads.
+    assert_eq!(s.factory.stats().circles, 0);
+
+    // The same terms at sane values still work.
+    assert!(ok(&s.factory.try_create(
+        &s.alice,
+        &name(&s.env, "Family sandoq"),
+        &100,
+        &WEEK,
+        &3,
+        &100,
+        &s.fill_deadline,
+        &false,
+    )));
+    assert_eq!(s.factory.stats().circles, 1);
+}
+
+#[test]
+fn stats_saturates_rather_than_overflowing() {
+    // The bounds on `create` cannot reach circles deployed before them, so the
+    // aggregate has to survive numbers it would never accept today. Legal
+    // values are nowhere near the limit - this pins that the sum saturates
+    // instead of panicking, because one panicking circle stops the whole
+    // registry from being read.
+    let s = setup();
+    for index in 0..3 {
+        s.factory.create(
+            &s.alice,
+            &name(&s.env, if index == 0 { "a" } else { "b" }),
+            &(i64::MAX as i128),
+            &WEEK,
+            &24,
+            &0,
+            &s.fill_deadline,
+            &false,
+        );
+    }
+    let stats = s.factory.stats();
+    assert_eq!(stats.circles, 3);
+    assert!(stats.committed > 0);
+}

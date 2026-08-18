@@ -47,6 +47,9 @@ const MAX_NAME_LEN: u32 = 64;
 /// `create` before paying for a deployment.
 const MIN_MEMBERS: u32 = 2;
 const MAX_MEMBERS: u32 = 24;
+const MIN_PERIOD: u64 = 3_600;
+const MAX_PERIOD: u64 = 365 * 24 * 3_600;
+const MAX_AMOUNT: i128 = i64::MAX as i128;
 
 /// Reading every circle costs one cross-contract call each, so aggregate
 /// reads are capped rather than growing without bound as the registry fills.
@@ -84,6 +87,11 @@ pub struct Row {
 /// Each circle costs one cross-contract call to read, so only the first
 /// `MAX_AGGREGATE` are visited. `aggregated` says how many were actually
 /// summed — when it is smaller than `circles`, the totals are a lower bound.
+///
+/// The sums saturate rather than wrap. One circle carrying an absurd
+/// contribution would otherwise overflow the total and panic, and since this
+/// runs over every circle, that single circle would take the whole registry
+/// down for everyone — a denial of service costing the attacker one `create`.
 #[contracttype]
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct Stats {
@@ -180,13 +188,16 @@ impl Factory {
         if contribution <= 0 {
             return Err(Error::InvalidContribution);
         }
-        if period == 0 {
+        if contribution > MAX_AMOUNT {
+            return Err(Error::InvalidContribution);
+        }
+        if !(MIN_PERIOD..=MAX_PERIOD).contains(&period) {
             return Err(Error::InvalidPeriod);
         }
         if !(MIN_MEMBERS..=MAX_MEMBERS).contains(&size) {
             return Err(Error::InvalidSize);
         }
-        if collateral < 0 {
+        if !(0..=MAX_AMOUNT).contains(&collateral) {
             return Err(Error::InvalidCollateral);
         }
         if fill_deadline <= env.ledger().timestamp() {
@@ -311,8 +322,13 @@ impl Factory {
                 Status::Active => stats.active += 1,
                 Status::Complete => stats.complete += 1,
             }
-            stats.members += state.members;
-            stats.committed += state.contribution * (state.size as i128) * (state.size as i128);
+            stats.members = stats.members.saturating_add(state.members);
+            stats.committed = stats.committed.saturating_add(
+                state
+                    .contribution
+                    .saturating_mul(state.size as i128)
+                    .saturating_mul(state.size as i128),
+            );
         }
         stats
     }
