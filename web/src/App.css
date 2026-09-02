@@ -1598,3 +1598,94 @@ a {
 .trust strong {
   color: inherit;
 }
+
+/* ------------------------------------------------------------ anchor panel */
+
+/* Cash in / cash out through a SEP-24 anchor. Same bones as the feedback
+   panel; the transaction card is the one new shape, and it reads like the
+   round reminder — one line of status, then whatever the user has to do. */
+.anchor-login p,
+.anchor-controls {
+  margin: 0 0 0.75rem;
+}
+
+.anchor-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.anchor-tx {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--border-strong);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  background: rgba(255, 169, 77, 0.06);
+}
+
+.anchor-tx--done {
+  border-left-color: var(--live);
+  background: rgba(61, 220, 151, 0.06);
+}
+
+.anchor-tx__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  align-items: baseline;
+}
+
+.anchor-tx__status {
+  color: var(--accent-2);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: right;
+}
+
+.anchor-tx--done .anchor-tx__status {
+  color: var(--live);
+}
+
+.anchor-tx p {
+  margin: 0;
+}
+
+.anchor-tx a {
+  color: var(--accent);
+  font-size: 0.85rem;
+}
+
+.anchor-pay {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+.anchor-pay code {
+  font-size: 0.85em;
+}
+
+.anchor-history {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.anchor-history li {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.anchor-history p {
+  margin: 0;
+}

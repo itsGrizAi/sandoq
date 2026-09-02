@@ -25,7 +25,7 @@ The task page itself is more specific than that summary. Its checklist, against 
 | Community contribution link — blog, tutorial, workshop, OSS, or session | ⬜ |
 | Google Form + Excel export linked in README | ✅ carried from Level 5 |
 
-**And one advanced feature, mandatory — pick at least one:**
+**And one advanced feature, mandatory — pick at least one.** ✅ **SEP-24 is built** (see the README's *Cash in, cash out* section): discovery, wallet-signed login, deposit and withdrawal sessions, status polling and the withdrawal payment, verified against SDF's test anchor. The table below is what was weighed:
 
 | Option | Fit for Sandoq |
 |---|---|

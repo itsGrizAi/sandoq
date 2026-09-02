@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import { ActivityFeed } from './components/ActivityFeed';
 import { AnalyticsPanel } from './components/AnalyticsPanel';
+import { AnchorPanel } from './components/AnchorPanel';
 import { FeedbackPanel } from './components/FeedbackPanel';
 import { CircleCard } from './components/CircleCard';
 import { CircleDetail } from './components/CircleDetail';
@@ -49,6 +50,7 @@ export default function App() {
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [showOnboard, setShowOnboard] = useState(false);
+  const [showAnchor, setShowAnchor] = useState(false);
   const [progress, setProgress] = useState<TxProgress>({ stage: 'idle' });
   const feed = useCircleEventsFeed(sandoq.listing.map((row) => row.address));
 
@@ -114,6 +116,10 @@ export default function App() {
       ) : showAnalytics ? (
         <main className="page__body">
           <AnalyticsPanel stats={sandoq.stats} onClose={() => setShowAnalytics(false)} />
+        </main>
+      ) : showAnchor ? (
+        <main className="page__body">
+          <AnchorPanel wallet={wallet} onClose={() => setShowAnchor(false)} />
         </main>
       ) : selected ? (
         <CircleDetail address={selected} wallet={wallet} onBack={() => select(null)} />
@@ -200,6 +206,7 @@ export default function App() {
           onClick={() => {
             setShowFeedback(false);
             setShowAnalytics(false);
+            setShowAnchor(false);
             setShowOnboard((open) => !open);
           }}
         >
@@ -211,6 +218,7 @@ export default function App() {
           onClick={() => {
             setShowFeedback(false);
             setShowOnboard(false);
+            setShowAnchor(false);
             setShowAnalytics((open) => !open);
           }}
         >
@@ -222,10 +230,23 @@ export default function App() {
           onClick={() => {
             setShowAnalytics(false);
             setShowOnboard(false);
+            setShowAnchor(false);
             setShowFeedback((open) => !open);
           }}
         >
           {showFeedback ? 'Back to circles' : 'Give feedback'}
+        </button>
+        {' · '}
+        <button
+          className="link-button"
+          onClick={() => {
+            setShowAnalytics(false);
+            setShowOnboard(false);
+            setShowFeedback(false);
+            setShowAnchor((open) => !open);
+          }}
+        >
+          {showAnchor ? 'Back to circles' : 'Cash in / out'}
         </button>
       </footer>
     </div>

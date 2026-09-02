@@ -9,6 +9,13 @@ export const FACTORY_ID =
 export const FEEDBACK_ID =
   import.meta.env.VITE_FEEDBACK_ID ?? 'CA3FBYWIJUJPUSU7I75M343FEDGLXNXPXIF4QUUAKKZK5NZLPETSETO7';
 
+/**
+ * The anchor the app cashes in and out through (SEP-24). SDF's test anchor
+ * moves XLM, USDC and its own SRT on testnet; on mainnet this becomes a real
+ * regulated anchor for the members' corridor.
+ */
+export const ANCHOR_HOME_DOMAIN = import.meta.env.VITE_ANCHOR_DOMAIN ?? 'testanchor.stellar.org';
+
 /** Stellar Asset Contract for native XLM on testnet. */
 export const NATIVE_SAC = 'CDLZFC3SYJYDZT7K67VZ75HPJVIEUVNIXF47ZG2FB2RMQQVU2HHGCYSC';
 

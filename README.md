@@ -212,7 +212,7 @@ then the frontend's lint, 49 tests, and production build. `main` deploys to GitH
 
 ![CI pipeline](screenshots/06-ci-pipeline.png)
 
-**Tests** — 60 contract tests (36 circle, 14 factory, 10 feedback) and 53 frontend tests, all green.
+**Tests** — 60 contract tests (36 circle, 14 factory, 10 feedback) and 61 frontend tests, all green.
 Full output in [screenshots/test-output.txt](screenshots/test-output.txt).
 
 ![Test output](screenshots/07-test-output.png)
@@ -503,6 +503,37 @@ Prioritised directly from what users ask for and the roadmap:
    circle denominated in something that does not move is the version people would actually use.
 
 Each ships as its own commit and gets linked back here as it lands.
+
+### Cash in, cash out — SEP-24 anchor integration
+
+A savings circle only matters if the money in it can come from, and go back to, the world the
+members live in. That exchange is what a Stellar **anchor** does — the regulated business that
+turns a bank transfer into an on-chain balance and back. Sandoq now has that door built in: the
+footer's **Cash in / out** opens a panel that walks a member through it.
+
+Three standards, three small functions in [`web/src/lib/anchor.ts`](web/src/lib/anchor.ts):
+
+| Standard | What it does here | Function |
+|---|---|---|
+| **SEP-1** | Reads the anchor's `stellar.toml` for its auth endpoint, transfer server and signing key | `discover()` |
+| **SEP-10** | The wallet signs a challenge that can never be submitted, proving it holds the account; the anchor returns a session token | `authenticate()` |
+| **SEP-24** | The anchor opens its *own* page for identity, bank details and amount, in a separate window; the app polls the transaction's status | `startInteractive()`, `getTransaction()` |
+
+For a withdrawal there is one on-chain step that is the member's to make — sending the asset to the
+account and memo the anchor names — and `sendWithdrawal()` builds that payment for the wallet to
+sign. Nothing about the member passes through this app: no document, no bank detail, no key. The
+session token lives in memory and is only ever sent back to the anchor that issued it.
+
+The challenge is checked before it reaches the wallet — signed by the anchor's published key, for
+this account, for this domain — so a hostile page cannot dress up something else as a login.
+
+**Verified against SDF's test anchor** (`testanchor.stellar.org`, which moves XLM, USDC and SRT on
+testnet): discovery, a signed login that returned a session token, a deposit and a withdrawal
+session both opened, status polled back, history read. The anchor's own window is where a human
+finishes the job, which is the point of the standard.
+
+On mainnet this becomes a real anchor for the members' corridor — the diaspora angle the project was
+approved on — and the setting is one line: `VITE_ANCHOR_DOMAIN`.
 
 ### Security
 

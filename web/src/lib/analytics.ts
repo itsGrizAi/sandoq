@@ -35,6 +35,10 @@ export type AnalyticsEvent =
   | 'reclaimed'
   | 'tx_failed'
   | 'feedback'
+  | 'anchor_opened'
+  | 'anchor_authenticated'
+  | 'anchor_started'
+  | 'anchor_completed'
   | 'error';
 
 export interface TrackedEvent {
