@@ -10,7 +10,7 @@ The official requirement, from the program page:
 | # | Requirement | Status |
 |---|---|---|
 | 1 | Security review or audit | ✅ [docs/security-review.md](security-review.md) — three findings, all fixed |
-| 2 | Features beyond the Level 5 submission | 🔶 started — the trust dial; stablecoin settlement next |
+| 2 | Features beyond the Level 5 submission | 🔶 the trust dial is live on-chain and on-screen; stablecoin settlement next |
 | 3 | Twitter profile with posts | ⬜ drafts below; the account is Milad's to create |
 | 4 | 30+ new users | ⬜ |
 | 5 | Live on Stellar Mainnet | ⬜ gated on the review's checklist |
@@ -40,18 +40,12 @@ feature and it is deliberately sequenced *after* the Level 5 verdict.
 
 ## Sequence
 
-**1 · Activate the hardened wasm** *(one command, safe now)*
+**1 · Activate the hardened wasm** ✅ *done*
 
-The reviewed build is uploaded but not yet what new circles deploy:
-
-```bash
-stellar contract invoke --id CB73QYCRM7BXR52W6FUTNCF6SVLAD26QTLUJCPMOKVKI7A6FPGNBVHRC \
-  --source deployer --network testnet -- \
-  set_circle_wasm --wasm 464c9433bf0e94ab38a0da05c6b12f7f3ff873f87b0c17d679c05f3a701fe212
-```
-
-Existing circles keep the code they were deployed with, so this changes nothing that Level 5 points
-at — it only fixes what gets created from here on.
+The factory now deploys the reviewed build ([`WasmSet` tx](https://stellar.expert/explorer/testnet/tx/2a8dddbf9a7cf592fa4460712f8debecb0cdcdc8605dcde8a629ffc7e4a35fd6)). Checked live afterwards: a
+1-second round is refused, and a new fully-staked circle — "Trustless circle",
+`CDWOG5JH6Q3E5CYKCEXJR363WAY3SL7B53MN67ZFLUX4YBKECMU5Y5HA` — reports `trust_gap() = 0` and wears
+the badge on the home page next to the eight that need trust. Nothing Level 5 points at changed.
 
 **2 · Stablecoin settlement** *(after the Level 5 verdict)*
 

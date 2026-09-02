@@ -127,17 +127,15 @@ bounds added today cannot reach circles deployed yesterday.
 
 ## Before mainnet
 
-1. **Point the factory at the hardened wasm.** Uploaded to testnet as
-   `464c9433bf0e94ab38a0da05c6b12f7f3ff873f87b0c17d679c05f3a701fe212`, but not yet activated:
-
-   ```bash
-   stellar contract invoke --id CB73QYCRM7BXR52W6FUTNCF6SVLAD26QTLUJCPMOKVKI7A6FPGNBVHRC \
-     --source deployer --network testnet -- \
-     set_circle_wasm --wasm 464c9433bf0e94ab38a0da05c6b12f7f3ff873f87b0c17d679c05f3a701fe212
-   ```
-
-   Circles already deployed keep running the code they were created with, so the existing testnet
-   circles still carry the unbounded-period and unbounded-amount versions. Only new ones are fixed.
+1. **Point the factory at the hardened wasm.** ✅ Done on testnet —
+   `464c9433bf0e94ab38a0da05c6b12f7f3ff873f87b0c17d679c05f3a701fe212` is now what the factory
+   deploys ([`WasmSet` tx](https://stellar.expert/explorer/testnet/tx/2a8dddbf9a7cf592fa4460712f8debecb0cdcdc8605dcde8a629ffc7e4a35fd6)). Verified live: a 1-second round is refused with
+   `InvalidPeriod`, and a fully-staked circle created afterwards reports `trust_gap() = 0`.
+   Circles deployed before this keep the code they were created with, so the older testnet
+   circles still carry the unbounded-period and unbounded-amount versions; only new ones are
+   fixed. The factory contract itself was not redeployed — see
+   [level-6-plan.md](level-6-plan.md) for why — so its saturating `stats` is not live yet;
+   the circle-side amount cap makes the overflow unreachable regardless.
 2. Settle the storage-lifetime question above if long rounds are to be offered at all.
 3. Choose the settlement asset deliberately and pin it in `web/src/config.ts`.
 4. Get an external audit. This review was written by the same party that wrote the code, which is
