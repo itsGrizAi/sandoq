@@ -35,7 +35,7 @@ Builder Team before development began.
 | Next-phase plan built from that feedback | [Next phase](#next-phase-blue--black) | ✅ |
 | Updated documentation | this README · [ONBOARDING.md](ONBOARDING.md) · [docs/](docs/) | ✅ |
 | Demo video walkthrough | [screenshots/demo.mp4](https://github.com/itsgriznft/sandoq/blob/main/screenshots/demo.mp4) — 3 minutes, narrated | ✅ |
-| Proof of 50+ users with real transaction activity | [docs/user-activity.csv](docs/user-activity.csv) — **9 wallets so far**, generated from chain | 🔸 in progress |
+| Proof of 50+ users with real transaction activity | [docs/user-activity.csv](docs/user-activity.csv) — **12 wallets so far**, generated from chain | 🔸 in progress |
 
 ---
 
@@ -457,8 +457,9 @@ node scripts/export-users.mjs      # docs/user-activity.csv, straight from chain
 python scripts/build-workbook.py   # docs/user-feedback.xlsx
 ```
 
-Where it stands right now: **9 distinct wallets** have touched the contracts, **8** left signed
-on-chain feedback averaging **4.5 / 5**, across **5 circles** (two mid-rotation, one invite-only).
+Where it stands right now: **12 distinct wallets** have touched the contracts, **8** left signed
+on-chain feedback averaging **4.6 / 5**, across **9 circles** — three of them started by users
+overnight, one full rotation complete, one invite-only.
 Alongside that, **10 people filled the survey**, rating it **4.7 / 5**.
 
 Those two numbers describe different things and the gap between them is the honest state of this
