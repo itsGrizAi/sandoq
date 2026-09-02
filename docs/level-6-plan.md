@@ -7,14 +7,39 @@ The official requirement, from the program page:
 > submission. Launch your application on **Stellar Mainnet**, onboard real mainnet users
 > (**at least 20**), complete **security reviews or audits**, and grow real ecosystem adoption.
 
-| # | Requirement | Status |
-|---|---|---|
-| 1 | Security review or audit | ✅ [docs/security-review.md](security-review.md) — three findings, all fixed |
-| 2 | Features beyond the Level 5 submission | 🔶 the trust dial is live on-chain and on-screen; stablecoin settlement next |
-| 3 | Twitter profile with posts | ⬜ drafts below; the account is Milad's to create |
-| 4 | 30+ new users | ⬜ |
-| 5 | Live on Stellar Mainnet | ⬜ gated on the review's checklist |
-| 6 | 20+ real mainnet users | ⬜ |
+The task page itself is more specific than that summary. Its checklist, against where Sandoq stands
+(Level 5 was **approved** in the July period; this is a September-period submission):
+
+| Required | Status |
+|---|---|
+| Public GitHub repository | ✅ |
+| 30+ meaningful commits | ✅ well past it |
+| Live **mainnet** application | ⬜ testnet only |
+| Mainnet contract addresses | ⬜ |
+| Proof of 20+ **mainnet** users, with transaction activity | ⬜ |
+| Audit **or** security review *approved by mentors/team* | 🔶 [review written](security-review.md); needs the team's sign-off |
+| Twitter/X launch post link | ⬜ drafts below; the account is Milad's to create |
+| Demo video link | ✅ [screenshots/demo.mp4](../screenshots/demo.mp4) |
+| Technical documentation | ✅ README + docs/ |
+| User guide | ✅ [ONBOARDING.md](../ONBOARDING.md) |
+| Community contribution link — blog, tutorial, workshop, OSS, or session | ⬜ |
+| Google Form + Excel export linked in README | ✅ carried from Level 5 |
+
+**And one advanced feature, mandatory — pick at least one:**
+
+| Option | Fit for Sandoq |
+|---|---|
+| Fee sponsorship — gasless transactions via fee bump | Strong. New users arrive with no XLM; a sponsor paying their fees removes the last onboarding wall, which is exactly the problem behind "20 mainnet users". Needs a small relay that holds the sponsor key. |
+| Cross-border flows — SEP-24 / SEP-31 anchor | Strongest story. It was in the approved idea essay (diaspora, on/off-ramp) and matches the program's stated priorities. Frontend-only against SDF's test anchor; on mainnet, a real anchor. |
+| Multi-signature logic | Weak fit — there is no organizer action worth multi-party approval by design. |
+| Account abstraction — smart wallet | Heavy, and orthogonal to the product. |
+
+Recommendation: **SEP-24 first**, because it is the feature the idea was approved on and it makes the
+product true to its pitch; fee sponsorship second, because it is what actually gets strangers to
+their first transaction. Both count. Doing both is the difference between passing and winning.
+
+The page also says, in so many words: *Level 6 never ends* — finish the requirements, then keep
+onboarding and keep improving. It is a monthly cycle, not a gate.
 
 ---
 
