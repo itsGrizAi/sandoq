@@ -535,7 +535,8 @@ this account, for this domain — so a hostile page cannot dress up something el
 **Run for real against SDF's test anchor** (`testanchor.stellar.org`, which moves XLM, USDC and
 SRT on testnet). From the live app, with Freighter: the wallet signed the SEP-10 challenge, the
 anchor's own window took the deposit, and 90 XLM landed in the wallet — 100 in, the anchor's 10 fee
-out — as an ordinary Stellar payment anyone can inspect:
+out — as an on-chain XLM transfer anyone can inspect (the anchor pays through the asset contract,
+so it shows as a contract call whose effect is the credit):
 [`a374a044…`](https://stellar.expert/explorer/testnet/tx/a374a044cf2f182f25548c74d65d05fb64b1b062cf2757050e0f9451517d2fa3). The panel polled the transaction to
 `completed` and lists it in the wallet's history with that anchor.
 
