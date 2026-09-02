@@ -175,6 +175,11 @@ feedback. Every wallet pop-up and confirmation in it is a real testnet transacti
 
 ▶️ **[screenshots/demo.mp4](https://github.com/itsgriznft/sandoq/blob/main/screenshots/demo.mp4)**
 
+**Cash in through the anchor** — SEP-24 end to end from the live app: wallet-signed login, the
+anchor's own deposit page, and the resulting on-chain payment linked from the panel.
+
+![Anchor panel after a completed deposit](screenshots/09-anchor.png)
+
 **Circles** — every card and the header stats are cross-contract reads from the factory.
 
 ![Home](screenshots/01-home.png)
@@ -527,10 +532,14 @@ session token lives in memory and is only ever sent back to the anchor that issu
 The challenge is checked before it reaches the wallet — signed by the anchor's published key, for
 this account, for this domain — so a hostile page cannot dress up something else as a login.
 
-**Verified against SDF's test anchor** (`testanchor.stellar.org`, which moves XLM, USDC and SRT on
-testnet): discovery, a signed login that returned a session token, a deposit and a withdrawal
-session both opened, status polled back, history read. The anchor's own window is where a human
-finishes the job, which is the point of the standard.
+**Run for real against SDF's test anchor** (`testanchor.stellar.org`, which moves XLM, USDC and
+SRT on testnet). From the live app, with Freighter: the wallet signed the SEP-10 challenge, the
+anchor's own window took the deposit, and 90 XLM landed in the wallet — 100 in, the anchor's 10 fee
+out — as an ordinary Stellar payment anyone can inspect:
+[`a374a044…`](https://stellar.expert/explorer/testnet/tx/a374a044cf2f182f25548c74d65d05fb64b1b062cf2757050e0f9451517d2fa3). The panel polled the transaction to
+`completed` and lists it in the wallet's history with that anchor.
+
+![Cash in through the anchor](screenshots/09-anchor.png)
 
 On mainnet this becomes a real anchor for the members' corridor — the diaspora angle the project was
 approved on — and the setting is one line: `VITE_ANCHOR_DOMAIN`.
